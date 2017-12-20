@@ -13,9 +13,8 @@ module.exports = class {
 			return Promise.resolve(this._pendingLines.shift());
 		}
 		if(this._isEnded) {
-			return;
+			return undefined;
 		}
-		
 		return new Promise((resolve, reject) => {
 			this._stream.resume().on('data', (chunk) => {
 				this._buffer = Buffer.concat([this._buffer, chunk]);
@@ -31,7 +30,7 @@ module.exports = class {
 				resolve(this._pendingLines.shift());
 			}).on('end', () => {
 				this._isEnded = true;
-				resolve();
+				resolve(this._pendingLines.shift());
 			});;
 		});
 	}
