@@ -1,5 +1,5 @@
 {
-  "name": "line-reader",
+  "name": "promise-readline",
   "version": "1.0.0",
   "description": "promise-style line reader.",
   "main": "index.js",
