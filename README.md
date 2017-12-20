@@ -19,6 +19,7 @@ but because they are hard.
 
 ```javascript
 const lineReader = require('promise-readline');
+const fs = require('fs');
 
 (async () => {
     //for stdin use: let lr = LineReader(process.stdin);
@@ -29,5 +30,5 @@ const lineReader = require('promise-readline');
     await lr.readLine(); // but because they are hard.
     await lr.readLine(); // undefined
 })()
-.catch(console.err);
+.catch(console.error);
 ```
