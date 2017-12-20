@@ -1,0 +1,26 @@
+{
+  "name": "line-reader",
+  "version": "1.0.0",
+  "description": "promise-style line reader.",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "lineReader",
+    "readline",
+    "promise",
+    "file",
+    "stdin"
+  ],
+  "author": "Magnus Lin, Ray Chen",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnuslim/readline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/magnuslim/readline/issues"
+  },
+  "homepage": "https://github.com/magnuslim/readline#readme"
+}
