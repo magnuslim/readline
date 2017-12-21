@@ -24,30 +24,26 @@ module.exports = class {
 			return Promise.resolve();
 		}
 		return new Promise((resolve, reject) => {
-			let resolved = false; // Mark promise as resolved, or it may be resolved twice.(ondata & onend)
 			let onData = (chunk) => {
 				this._stream.pause();
+				// Remove all callback, otherwise it would always bind to event 'data', and will be called next time event 'data' is fired.
 				this._stream.removeListener('data', onData);
-				this._stream.removeListener('end', onEnd);
-				this._buffer = Buffer.concat([this._buffer, chunk]);
+				// Make sure that resolve() will always be called just one time.
+				this._stream.removeListener('end', onEnd); 
 
 				// Save complete lines into this._pendingLines and leave other characters in buffer.
+				this._buffer = Buffer.concat([this._buffer, chunk]);
 				let nlOffset = 0;
 				while((nlOffset = this._buffer.indexOf(10)) >= 0) {
 					this._addline(this._buffer.slice(0, nlOffset));
 					this._buffer = this._buffer.slice(nlOffset + 1);
 				}
 
-				if(!resolved) {
-					resolve(this._pendingLines.shift());
-					resolved = true;
-				}
+				// Recursion is for very long line.
+				resolve(this.readLine());
 			};
 			let onEnd = () => {
-				if(!resolved) {
-					resolve(this._pendingLines.shift());
-					resolved = true;
-				}
+				resolve(this.readLine());
 			};
 			this._stream.on('data', onData).on('end', onEnd).resume();
 		});
