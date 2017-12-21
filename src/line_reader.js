@@ -10,7 +10,6 @@ module.exports = class {
 			this._isEnded = true;
 			// The left chatarcters remain one line.
 			if(this._buffer.length > 0) {
-				console.log('final buffer');
 				this._addline(this._buffer);
 				this._buffer = Buffer.alloc(0);
 			}
