@@ -6,6 +6,15 @@ module.exports = class {
 		this._pendingLines = [];
 		this._buffer = Buffer.alloc(0);
 		this._isEnded = false;
+		this._stream.on('end', () => {
+			this._isEnded = true;
+			// The left chatarcters remain one line.
+			if(this._buffer.length > 0) {
+				console.log('final buffer');
+				this._addline(this._buffer);
+				this._buffer = Buffer.alloc(0);
+			}
+		});
 	}
 
 	readLine() {
@@ -17,8 +26,10 @@ module.exports = class {
 		}
 		return new Promise((resolve, reject) => {
 			let resolved = false; // Mark promise as resolved, or it may be resolved twice.(ondata & onend)
-			this._stream.resume().on('data', (chunk) => {
+			let onData = (chunk) => {
 				this._stream.pause();
+				this._stream.removeListener('data', onData);
+				this._stream.removeListener('end', onEnd);
 				this._buffer = Buffer.concat([this._buffer, chunk]);
 
 				// Save complete lines into this._pendingLines and leave other characters in buffer.
@@ -29,23 +40,17 @@ module.exports = class {
 				}
 
 				if(!resolved) {
-					let r = resolve(this._pendingLines.shift());
+					resolve(this._pendingLines.shift());
 					resolved = true;
 				}
-			}).on('end', () => {
-				this._isEnded = true;
-
-				// The left chatarcters remain one line.
-				if(this._buffer.length > 0) {
-					this._addline(this._buffer);
-					this._buffer = Buffer.alloc(0);
-				}
-
+			};
+			let onEnd = () => {
 				if(!resolved) {
 					resolve(this._pendingLines.shift());
 					resolved = true;
 				}
-			});;
+			};
+			this._stream.on('data', onData).on('end', onEnd).resume();
 		});
 	}
 
