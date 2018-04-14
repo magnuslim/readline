@@ -8,5 +8,7 @@ const fs = require('fs');
     console.log(await lr.readLine()); // not because they are easy,
     console.log(await lr.readLine()); // but because they are hard.
     console.log(await lr.readLine()); // undefined
+
+    lr.close();
 })()
 .catch(console.error);

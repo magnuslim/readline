@@ -52,4 +52,8 @@ module.exports = class {
 	_addline(lineAsBuffer) {
 		this._pendingLines.push(lineAsBuffer.toString(this._encoding).replace(/\n|\r/g, ""));
 	}
+
+	close() {
+		this._stream.close();
+	}
 }

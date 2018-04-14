@@ -29,6 +29,8 @@ const fs = require('fs');
     await lr.readLine(); // not because they are easy,
     await lr.readLine(); // but because they are hard.
     await lr.readLine(); // undefined
+
+    lr.close();
 })()
 .catch(console.error);
 ```
